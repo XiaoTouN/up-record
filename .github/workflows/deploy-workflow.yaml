@@ -2,8 +2,12 @@ name: Deploy static content to Pages
 
 on:
   push:
-    branches: [ 'main' ]
+    branches: ['main']
   workflow_dispatch:
+
+# 解决 2026 年 Node 20 弃用警告，强制 Actions 运行在 Node 24 环境
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 permissions:
   contents: read
@@ -24,17 +28,24 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # 1. 升级到 v4 以更好地支持 Node 24 和 pnpm 9+
       - name: Install pnpm
-        uses: pnpm/action-setup@v3
+        uses: pnpm/action-setup@v4
         with:
           version: 9
+          # 关键优化：由于你不是 Monorepo 却有 workspace 文件，
+          # 告诉 pnpm 忽略工作区检查，防止 "packages field missing" 报错。
+          standalone: true 
 
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
+          # 依然保留缓存，但因为上面设置了 standalone，pnpm store path 命令现在可以正常执行了
+          cache: 'pnpm'
 
       - name: Install dependencies
+        # 使用 --frozen-lockfile 确保环境一致性
         run: pnpm install --frozen-lockfile
 
       - name: Build
