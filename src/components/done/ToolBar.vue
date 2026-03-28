@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { Setting, EditPen, Star, StarFilled } from '@element-plus/icons-vue'
 import { ref } from 'vue'
 import { testData } from '/public/assets/data/index.js'
@@ -12,7 +12,7 @@ const { todayState } = storeToRefs(doneDataStore)
 
 const importTestData = () => {
   importData(
-    (Object.entries(testData) as Array<[string, number]>).map(([key, value]) => {
+    Object.entries(testData).map(([key, value]) => {
       return {
         time: key,
         done: Boolean(value),
@@ -21,9 +21,9 @@ const importTestData = () => {
   )
 }
 
-const tempTodayState = ref<boolean | null>(todayState.value)
+const tempTodayState = ref(todayState.value)
 console.log(tempTodayState.value)
-const selectState = (state: boolean) => {
+const selectState = (state) => {
   if (tempTodayState.value === state) {
     addTodayData(state)
   }
