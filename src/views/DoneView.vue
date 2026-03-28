@@ -30,13 +30,13 @@ import LineStatistics from '@/components/done/LineStatistics.vue'
   }
 
   @media (max-width: 767px) {
-    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 5fr 5fr;
     grid-template-columns: 1fr;
     gap: 15px;
     padding: 10px;
     //pointer-events: none;
 
-    >* {
+    > * {
       width: 100%;
       min-height: 200px;
     }
