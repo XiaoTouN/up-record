@@ -3,7 +3,7 @@ name: Deploy Vue App (pnpm)
 on:
   push:
     branches:
-      - main   # 👉 按需修改（比如 master）
+      - main
 
 permissions:
   contents: read
@@ -15,51 +15,46 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ 拉代码
+      # 1️⃣ Checkout
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 2️⃣ 安装 pnpm（不自动 install）
+      # 2️⃣ Setup pnpm
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
         with:
           version: 9
           run_install: false
 
-      # 3️⃣ 安装 Node（⚠️ 不使用 cache: pnpm）
+      # 3️⃣ Setup Node
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      # 4️⃣ 获取 pnpm store 路径
-      - name: Get pnpm store directory
-        id: pnpm-cache
-        run: echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
-
-      # 5️⃣ 缓存 pnpm store
+      # 4️⃣ ✅ 直接缓存 pnpm store（固定路径）
       - name: Setup pnpm cache
         uses: actions/cache@v4
         with:
-          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          path: ~/.pnpm-store
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
 
-      # 6️⃣ 安装依赖
+      # 5️⃣ Install
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # 7️⃣ 构建
+      # 6️⃣ Build
       - name: Build
         run: pnpm build
 
-      # 8️⃣ 上传构建产物
+      # 7️⃣ Upload
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist   # 👉 如果你不是 dist 要改
+          path: ./dist
 
-      # 9️⃣ 部署
-      - name: Deploy to GitHub Pages
+      # 8️⃣ Deploy
+      - name: Deploy
         uses: actions/deploy-pages@v4
