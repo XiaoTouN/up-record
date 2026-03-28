@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Setting, EditPen, Star, StarFilled } from '@element-plus/icons-vue'
 import { ref } from 'vue'
-import { testData } from '/public/assets/data'
+import { testData } from '/public/assets/data/index.js'
 import { useDoneDataStore } from '@/stores/done.ts'
 import { storeToRefs } from 'pinia'
 
