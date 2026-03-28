@@ -8,7 +8,7 @@ import RangeSelect from '@/components/done/RangeSelect.vue'
 import { storeToRefs } from 'pinia'
 
 const { data } = storeToRefs(useDoneDataStore())
-const rangeValue = ref(7)
+const rangeValue = ref(30)
 const chartDom = useTemplateRef('chartDom')
 let chartInstance: ECharts | any = null
 const option: any = {

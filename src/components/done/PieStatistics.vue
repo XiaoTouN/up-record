@@ -8,7 +8,7 @@ import { storeToRefs } from 'pinia'
 
 const { data } = storeToRefs(useDoneDataStore())
 // 时间范围
-const rangeValue = ref(7)
+const rangeValue = ref(30)
 const chartDom = useTemplateRef('chartDom')
 let chartInstance: ECharts | any = null
 const option: any = {

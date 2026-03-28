@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue'
+import { ref, computed, isProxy } from 'vue'
 import { defineStore } from 'pinia'
 import type { DataItem } from '@/types/done/type.ts'
 import { DONE_DATE_FORMAT, DONE_LOCALSTORAGE_KEY } from '@/constant'
@@ -30,6 +30,7 @@ export const useDoneDataStore = defineStore('doneData', () => {
   const addTodayData = (value: boolean) => {
     const todayDate = dayjs(new Date()).format(DONE_DATE_FORMAT)
     const existingData = data.value.find((item) => item.time === todayDate)
+
     if (existingData) {
       existingData.done = value
     } else {
@@ -51,10 +52,21 @@ export const useDoneDataStore = defineStore('doneData', () => {
     data.value = []
   }
 
+  const todayState = computed(() => {
+    const todayData = data.value.find(
+      (item) => item.time === dayjs(new Date()).format(DONE_DATE_FORMAT),
+    )
+    if (todayData) {
+      return todayData.done
+    } else {
+      return null
+    }
+  })
   return {
     data,
     addTodayData,
     importData,
     clearStorage,
+    todayState,
   }
 })
